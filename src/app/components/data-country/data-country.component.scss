@@ -1,0 +1,110 @@
+@import "abstracts/variables";
+@import "abstracts/mixins";
+@import "base/typography";
+
+.dataCountry {
+    width: 70vw;
+    margin: 8rem auto 0;
+    display: grid;
+    grid-template-columns: max-content 1fr;
+    gap: 3rem;
+
+    @include respond(tab-port) {
+        grid-template-columns: 1fr;
+        grid-template-rows: 37vh 40vh;
+        width: 65vw;
+    }
+
+    @include respond(phone) {
+        grid-template-rows: 30vh 50vh;
+        width: 80vw;
+        gap: 2rem;
+    }
+}
+
+.tableContainer {
+    position: relative;
+    background-color: white;
+    height: 70vh;
+    text-align: center;
+    box-shadow: 2px 2px 5px rgba(146, 148, 150, 0.5);
+    border: 1px solid rgba(146, 148, 150, 0.5);
+    border-radius: 3px;
+    @include respond(tab-port) {
+        order: 2;
+        height: 40vh;
+        justify-self: center;
+    }
+
+    @include respond(phone) {
+        height: 50vh;
+    }
+}
+
+.dataTable {
+    height: 100%;
+
+    td {
+        @include respond(tab-port) {
+            width: 80vw;
+        }
+    }
+
+    &__head {
+        height: 4rem;
+        border-bottom: 1px solid rgba($color-grey-dark-1, 1);
+        border-radius: 2px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    tbody {
+        display: block;
+        height: inherit;
+        overflow-y: auto;
+        scrollbar-width: none;
+        background-color: ivory;
+
+        &::-webkit-scrollbar-track {
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            background-color: #f5f5f5;
+        }
+
+        &::-webkit-scrollbar {
+            width: 12px;
+            background-color: #f5f5f5;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+            background-color: #d62929;
+        }
+    }
+
+    &__button {
+        width: 100%;
+        margin: 2px auto;
+        border: 1px solid grey;
+        border-radius: 0.5rem;
+        height: 5rem;
+
+        &:hover {
+            background-color: rgba($color-grey-light-1, 0.8);
+            transform: translateY(-3px);
+            box-shadow: 0 4px 3px rgba(0, 0, 0, 0.3);
+        }
+
+        &:active {
+            background-color: rgba($color-grey-light-1, 0.8);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+        }
+
+        &:focus {
+            outline: none;
+            background-color: rgba($color-grey-light-1, 0.8);
+        }
+    }
+}

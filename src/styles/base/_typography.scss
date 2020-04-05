@@ -1,0 +1,60 @@
+@import "abstracts/variables";
+@import "abstracts/mixins";
+@import url("https://fonts.googleapis.com/css?family=Nunito&display=swap");
+
+body {
+    color: $color-grey-dark-3;
+    font-family: $font-family;
+    font-size: 1.6rem;
+    font-weight: 400;
+    line-height: 1.7;
+}
+
+%headline {
+    font-family: $font-family;
+    font-style: normal;
+}
+
+.headline-1 {
+    @extend %headline;
+    font-weight: 300;
+    font-size: 9.6rem;
+    line-height: 112px;
+    letter-spacing: -1.5px;
+}
+
+.headline-2 {
+    @extend %headline;
+    font-weight: 300;
+    font-size: 6rem;
+    line-height: 7rem;
+    /* identical to box height */
+
+    letter-spacing: -0.5px;
+}
+.headline-3 {
+    @extend %headline;
+    font-weight: normal;
+    font-size: 4.8rem;
+    line-height: 5.6rem;
+}
+.headline-4 {
+    @extend %headline;
+    font-weight: normal;
+    font-size: 3.4rem;
+    line-height: 4rem;
+    letter-spacing: 0.25px;
+}
+.headline-5 {
+    @extend %headline;
+    font-weight: normal;
+    font-size: 24px;
+    line-height: 28px;
+}
+.headline-6 {
+    @extend %headline;
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 23px;
+    letter-spacing: 0.15px;
+}

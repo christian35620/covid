@@ -1,0 +1,20 @@
+<div class="dataCountry">
+    <div class="tableContainer">
+        <table class="dataTable">
+            <thead>
+                <tr>
+                    <th class="dataTable__head">List of Countries</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let country of countries">
+                    <td>
+                        <button (click)="currentCountry = country.Slug" class="dataTable__button">{{ country.Country }}</button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <app-datacard [showCountry]="currentCountry"></app-datacard>
+</div>
