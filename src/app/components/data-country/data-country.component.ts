@@ -1,5 +1,5 @@
 import { Component, OnInit } from "@angular/core"
-import * as data from "../../../assets/countries/countries.json"
+import * as data from "../../../assets/countries/paises.json"
 
 @Component({
     selector: "app-data-country",
@@ -7,8 +7,7 @@ import * as data from "../../../assets/countries/countries.json"
     styleUrls: ["./data-country.component.scss"],
 })
 export class DataCountryComponent implements OnInit {
-    countries: any[] = (data as any).default
-    currentCountry: string
+    countries: any[] = (data as any).default // lista proveniente de paises.json
 
     constructor() {}
 

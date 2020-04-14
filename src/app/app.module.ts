@@ -21,8 +21,8 @@ import { DatacardComponent } from "./components/datacard/datacard.component"
     ],
     imports: [
         BrowserModule, //
-        AppRoutingModule,
         HttpClientModule,
+        AppRoutingModule,
     ],
     providers: [],
     bootstrap: [AppComponent],

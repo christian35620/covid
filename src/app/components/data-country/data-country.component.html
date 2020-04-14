@@ -1,20 +1,17 @@
 <div class="dataCountry">
-    <div class="tableContainer">
-        <table class="dataTable">
-            <thead>
-                <tr>
-                    <th class="dataTable__head">List of Countries</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr *ngFor="let country of countries">
-                    <td>
-                        <button (click)="currentCountry = country.Slug" class="dataTable__button">{{ country.Country }}</button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
+    <div class="countryList">
+        <div class="countryList__head"><h2 class="countryList__head--title">List of Countries</h2></div>
+        <div class="countryList__countries">
+            <ul class="dataList">
+                <li *ngFor="let country of countries" class="dataList__item">
+                    <a [routerLink]="['/country', country.Slug]" class="dataList__button">
+                        {{ country.Country }}
+                    </a>
+                </li>
+            </ul>
+        </div>
     </div>
-
-    <app-datacard [showCountry]="currentCountry"></app-datacard>
+    <div class="datacontainer">
+        <router-outlet></router-outlet>
+    </div>
 </div>
