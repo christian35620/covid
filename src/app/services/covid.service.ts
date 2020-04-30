@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
-import { CountryReport, CountryReportAdapter, CountryApi } from "../model/country-report.model"
+import { CountryReportAdapter, CountryApi } from "../model/country-report.model"
 
 import { map, tap, shareReplay, switchMap } from "rxjs/operators"
 import { Observable, of, timer } from "rxjs"
@@ -19,7 +19,6 @@ export class CovidService {
 
     getQuery(query: string) {
         const url = `https://api.covid19api.com/${query}`
-        // const url = `http://localhost:3000/${query}`
         return this.http.get(url)
     }
 
@@ -43,9 +42,4 @@ export class CovidService {
         return this.getQuery(`summary`) //
             .pipe(map((item: any) => item.Countries))
     }
-
-    // getCountryConfirmed(country: string): Observable<CountryReport> {
-    //     return this.getQuery(`live/country/${country}/status/confirmed`) //
-    //         .pipe(map((data: any[]) => data.map((item) => this.adapter.adapt(item))[data.length - 1]))
-    // }
 }

@@ -26,16 +26,16 @@ export class DatacardComponent implements OnInit, OnDestroy {
     constructor(private covid: CovidService, private router: ActivatedRoute, private adapter: CountryReportAdapter) {}
 
     ngOnInit(): void {
-        this.stateHandler("init")
+        this.stateInit()
         this.suscription = this.covid.getCountriesSummary().subscribe((countries: CountryApi[]) => {
             this.countries = countries
 
             this.router.params.subscribe((params) => {
                 if (Object.keys(params).length !== 0) {
                     this.confirmedCases = this.getCountrySummary(params.country)
-                    this.stateHandler("data")
-                } else if (Object.keys(params).length === 0) {
-                    this.stateHandler("init")
+                    this.stateSuccesful()
+                } else {
+                    this.stateInit()
                 }
             })
         })
@@ -45,72 +45,56 @@ export class DatacardComponent implements OnInit, OnDestroy {
         this.suscription.unsubscribe()
     }
 
-    // getConfirmed(country): object {
-    //     return this.summary.filter((pais) => pais.Slug === country).map((item) => ({ country: item.Country, confirmed: item.TotalConfirmed, date: item.Date }))[0]
-    // }
-
     getCountrySummary(countryName: string): CountryReport {
-        this.stateHandler("loading")
+        this.stateLoading()
         if (this.countries) {
             const foundCountry = this.countries.find((country) => country.Slug === countryName)
             return this.adapter.adapt(foundCountry)
         }
     }
 
-    stateHandler(state: string) {
-        switch (state) {
-            case "init":
-                this.loading = false
-                this.error = false
-                this.warning = false
-                this.iniciar = true
-                this.mensajeError = "Select a country to see COVID-19 confirmed cases"
-                this.showCountry = false
+    stateInit() {
+        this.loading = false
+        this.error = false
+        this.warning = false
+        this.iniciar = true
+        this.mensajeError = "Select a country to see COVID-19 confirmed cases"
+        this.showCountry = false
+    }
 
-                break
+    stateLoading() {
+        this.loading = true
+        this.error = false
+        this.warning = false
+        this.iniciar = false
+        this.mensajeError = ""
+        this.showCountry = false
+    }
 
-            case "loading":
-                this.loading = true
-                this.error = false
-                this.warning = false
-                this.iniciar = false
-                this.mensajeError = ""
-                this.showCountry = false
+    stateError() {
+        this.loading = false
+        this.error = true
+        this.warning = false
+        this.iniciar = false
+        this.mensajeError = "There was an error conecting to the server"
+        this.showCountry = false
+    }
 
-                break
+    stateWarning() {
+        this.loading = false
+        this.error = false
+        this.warning = true
+        this.iniciar = false
+        this.mensajeError = "There is no data for this country"
+        this.showCountry = false
+    }
 
-            case "data":
-                this.loading = false
-                this.error = false
-                this.warning = false
-                this.iniciar = false
-                this.mensajeError = ""
-                this.showCountry = true
-
-                break
-
-            case "error":
-                this.loading = false
-                this.error = true
-                this.warning = false
-                this.iniciar = false
-                this.mensajeError = "There was an error conecting to the server"
-                this.showCountry = false
-
-                break
-
-            case "warning":
-                this.loading = false
-                this.error = false
-                this.warning = true
-                this.iniciar = false
-                this.mensajeError = "There is no data for this country"
-                this.showCountry = false
-
-                break
-
-            default:
-                break
-        }
+    stateSuccesful() {
+        this.loading = false
+        this.error = false
+        this.warning = false
+        this.iniciar = false
+        this.mensajeError = ""
+        this.showCountry = true
     }
 }
