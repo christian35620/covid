@@ -3,11 +3,11 @@ import { Routes, RouterModule } from "@angular/router"
 import { HomeComponent } from "./components/home/home.component"
 import { DataCountryComponent } from "./components/data-country/data-country.component"
 import { ContactComponent } from "./components/contact/contact.component"
-import { DatacardComponent } from "./components/datacard/datacard.component"
+import { DATACARD_ROUTES } from "./components/datacard/datacard.routes"
 
 const routes: Routes = [
     { path: "home", component: HomeComponent },
-    { path: "dataCountry", component: DataCountryComponent },
+    { path: "country", component: DataCountryComponent, children: DATACARD_ROUTES },
     { path: "contact", component: ContactComponent },
     { path: "", pathMatch: "full", redirectTo: "home" },
     { path: "**", pathMatch: "full", redirectTo: "home" },

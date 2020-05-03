@@ -1,57 +1,81 @@
-import { Component, OnInit, Input, AfterViewInit } from "@angular/core"
+import { Component, OnInit, OnDestroy } from "@angular/core"
 import { CovidService } from "src/app/services/covid.service"
+import { ActivatedRoute } from "@angular/router"
+import { Subscription } from "rxjs"
+import { CountryApi, CountryReport, CountryReportAdapter } from "src/app/model/country-report.model"
+import { StateHandlerService } from "src/app/services/state-handler.service"
 
 @Component({
     selector: "app-datacard",
     templateUrl: "./datacard.component.html",
     styleUrls: ["./datacard.component.scss"],
 })
-export class DatacardComponent implements OnInit {
-    private _showCountry: string = ""
-    confirmedCases: any
-    loading: boolean
-    error: boolean
-    warning: boolean = false
-    mensajeError: string
-    iniciar: boolean
+export class DatacardComponent implements OnInit, OnDestroy {
+    private suscription: Subscription
+    countries: CountryApi[]
+    countryReport: CountryReport
 
-    get showCountry(): string {
-        return this._showCountry
+    get iniciar(): boolean {
+        return this.state.iniciar
     }
 
-    @Input()
-    set showCountry(value: string) {
-        this._showCountry = value
-        this.loading = true
-        this.error = false
-        this.warning = false
-        this.iniciar = false
-        if (value) {
-            this.covid
-                .getCountryConfirmed(this.showCountry) //
-                .subscribe(
-                    (data) => {
-                        this.confirmedCases = data
-                        this.loading = false
-                        if (data === undefined) {
-                            this.mensajeError = "There is no data for this country"
-                            this.warning = true
-                        }
-                    },
-                    (errorServicio) => {
-                        this.error = true
-                        this.loading = false
-                        this.mensajeError = "No server connection"
-                    }
-                )
-        } else {
-            this.mensajeError = "Select a country to see COVID-19 confirmed cases"
-            this.loading = false
-            this.iniciar = true
+    get loading(): boolean {
+        return this.state.loading
+    }
+
+    get showCountry(): boolean {
+        return this.state.showCountry
+    }
+
+    get warning(): boolean {
+        return this.state.warning
+    }
+    get error(): boolean {
+        return this.state.error
+    }
+    get mensajeError(): string {
+        return this.state.mensajeError
+    }
+
+    constructor(
+        private covid: CovidService, //
+        private state: StateHandlerService,
+        private router: ActivatedRoute,
+        private adapter: CountryReportAdapter
+    ) {}
+
+    ngOnInit(): void {
+        this.state.Init()
+        this.subscribeToCountriesService()
+    }
+
+    subscribeToCountriesService() {
+        this.suscription = this.covid.getCountriesSummary().subscribe((countries: CountryApi[]) => {
+            this.countries = countries
+            this.getCountryForRouteParams()
+        })
+    }
+
+    getCountryForRouteParams() {
+        this.router.params.subscribe((params) => {
+            if (Object.keys(params).length !== 0) {
+                this.countryReport = this.getCountrySummary(params.country)
+                this.state.Succesful()
+            } else {
+                this.state.Init()
+            }
+        })
+    }
+
+    getCountrySummary(countryName: string): CountryReport {
+        this.state.Loading()
+        if (this.countries) {
+            const foundCountry = this.countries.find((country) => country.Slug === countryName)
+            return this.adapter.adapt(foundCountry)
         }
     }
 
-    constructor(private covid: CovidService) {}
-
-    ngOnInit(): void {}
+    ngOnDestroy() {
+        this.suscription.unsubscribe()
+    }
 }
