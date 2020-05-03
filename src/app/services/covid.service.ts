@@ -1,6 +1,6 @@
 import { Injectable } from "@angular/core"
 import { HttpClient } from "@angular/common/http"
-import { CountryReportAdapter, CountryApi } from "../model/country-report.model"
+import { CountryApi } from "../model/country-report.model"
 
 import { map, tap, shareReplay, switchMap } from "rxjs/operators"
 import { Observable, of, timer } from "rxjs"
@@ -13,7 +13,7 @@ const REFRESH_INTERVAL = 600000 //retrieve data every 10min
 export class CovidService {
     private countries: CountryApi[]
 
-    constructor(private http: HttpClient, private adapter: CountryReportAdapter) {
+    constructor(private http: HttpClient) {
         console.log("servicio listo")
     }
 

@@ -3,6 +3,7 @@ import { CovidService } from "src/app/services/covid.service"
 import { ActivatedRoute } from "@angular/router"
 import { Subscription } from "rxjs"
 import { CountryApi, CountryReport, CountryReportAdapter } from "src/app/model/country-report.model"
+import { StateHandlerService } from "src/app/services/state-handler.service"
 
 @Component({
     selector: "app-datacard",
@@ -14,87 +15,67 @@ export class DatacardComponent implements OnInit, OnDestroy {
     countries: CountryApi[]
     countryReport: CountryReport
 
-    confirmedCases: any
-    iniciar: boolean
-    showCountry: boolean
-    loading: boolean
-    error: boolean
-    warning: boolean
-    mensajeError: string
-    summary: any[] = []
+    get iniciar(): boolean {
+        return this.state.iniciar
+    }
 
-    constructor(private covid: CovidService, private router: ActivatedRoute, private adapter: CountryReportAdapter) {}
+    get loading(): boolean {
+        return this.state.loading
+    }
+
+    get showCountry(): boolean {
+        return this.state.showCountry
+    }
+
+    get warning(): boolean {
+        return this.state.warning
+    }
+    get error(): boolean {
+        return this.state.error
+    }
+    get mensajeError(): string {
+        return this.state.mensajeError
+    }
+
+    constructor(
+        private covid: CovidService, //
+        private state: StateHandlerService,
+        private router: ActivatedRoute,
+        private adapter: CountryReportAdapter
+    ) {}
 
     ngOnInit(): void {
-        this.stateInit()
+        this.state.Init()
+        this.subscribeToCountriesService()
+    }
+
+    subscribeToCountriesService() {
         this.suscription = this.covid.getCountriesSummary().subscribe((countries: CountryApi[]) => {
             this.countries = countries
-
-            this.router.params.subscribe((params) => {
-                if (Object.keys(params).length !== 0) {
-                    this.confirmedCases = this.getCountrySummary(params.country)
-                    this.stateSuccesful()
-                } else {
-                    this.stateInit()
-                }
-            })
+            this.getCountryForRouteParams()
         })
     }
 
-    ngOnDestroy() {
-        this.suscription.unsubscribe()
+    getCountryForRouteParams() {
+        this.router.params.subscribe((params) => {
+            if (Object.keys(params).length !== 0) {
+                this.countryReport = this.getCountrySummary(params.country)
+                this.state.Succesful()
+            } else {
+                this.state.Init()
+            }
+        })
     }
 
     getCountrySummary(countryName: string): CountryReport {
-        this.stateLoading()
+        this.state.Loading()
         if (this.countries) {
             const foundCountry = this.countries.find((country) => country.Slug === countryName)
             return this.adapter.adapt(foundCountry)
         }
     }
 
-    stateInit() {
-        this.loading = false
-        this.error = false
-        this.warning = false
-        this.iniciar = true
-        this.mensajeError = "Select a country to see COVID-19 confirmed cases"
-        this.showCountry = false
-    }
-
-    stateLoading() {
-        this.loading = true
-        this.error = false
-        this.warning = false
-        this.iniciar = false
-        this.mensajeError = ""
-        this.showCountry = false
-    }
-
-    stateError() {
-        this.loading = false
-        this.error = true
-        this.warning = false
-        this.iniciar = false
-        this.mensajeError = "There was an error conecting to the server"
-        this.showCountry = false
-    }
-
-    stateWarning() {
-        this.loading = false
-        this.error = false
-        this.warning = true
-        this.iniciar = false
-        this.mensajeError = "There is no data for this country"
-        this.showCountry = false
-    }
-
-    stateSuccesful() {
-        this.loading = false
-        this.error = false
-        this.warning = false
-        this.iniciar = false
-        this.mensajeError = ""
-        this.showCountry = true
+    ngOnDestroy() {
+        this.suscription.unsubscribe()
     }
 }

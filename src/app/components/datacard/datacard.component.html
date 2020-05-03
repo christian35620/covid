@@ -14,8 +14,8 @@
     </div>
     <i *ngIf="loading" class="fas" [ngClass]="{ 'fa-sync fa-spin fa-2x': loading }"></i>
     <ul *ngIf="showCountry" class="datacard__items">
-        <li class="datacard__item datacard__item--country">{{ confirmedCases?.country }}</li>
-        <li class="datacard__item datacard__item--date">{{ confirmedCases?.date | date: "MMM d, y, h:mm:ss a" }}</li>
-        <li class="datacard__item datacard__item--confirmed">Confirmed: {{ confirmedCases.confirmed }}</li>
+        <li class="datacard__item datacard__item--country">{{ countryReport?.country }}</li>
+        <li class="datacard__item datacard__item--date">{{ countryReport?.date | date: "MMM d, y, h:mm:ss a" }}</li>
+        <li class="datacard__item datacard__item--confirmed">Confirmed: {{ countryReport.confirmed }}</li>
     </ul>
 </div>
